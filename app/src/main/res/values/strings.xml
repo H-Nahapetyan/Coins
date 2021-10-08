@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CoinStats</string>
+    <string name="tab_name_overview">Overview</string>
+    <string name="tab_name_favorites">Favorites</string>
+    <string name="smth_went_wrong">Something went wrong</string>
+
+</resources>
