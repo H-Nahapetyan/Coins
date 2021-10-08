@@ -14,21 +14,20 @@ class OverviewViewModel(
     private val coinLocalRepo: CoinLocalRepository,
 ) : BaseViewModel() {
 
-    var coinsList: List<CoinDao>? by state(emptyList())
+    var coinsList: ArrayList<CoinDao> by state(ArrayList())
     var favoriteCoins = ArrayList<CoinDao>()
 
     init {
         runAsync {
             val localCoinsList = viewModelScope.async { coinLocalRepo.getCoins() }
-            val remoteCoinsList = viewModelScope.async { coinRemoteRepo.getCoins() }
-//        val localCoinsList = runAsync { coinLocalRepo.getCoins() }
-//        val remoteCoinsList = runAsync { coinRemoteRepo.getCoins() }
-
             if (coinsList.isNullOrEmpty()) {
-                coinsList = localCoinsList.await()
-            } else {
-                coinsList = remoteCoinsList.await()
+                coinsList.addAll(localCoinsList.await())
             }
+
+            val remoteCoinsList = viewModelScope.async { coinRemoteRepo.getCoins() }
+            val remoteList = remoteCoinsList.await()
+            coinsList = ArrayList()
+            coinsList.addAll(remoteList)
             coinLocalRepo.storeCoins(remoteCoinsList.await())
         }
     }
