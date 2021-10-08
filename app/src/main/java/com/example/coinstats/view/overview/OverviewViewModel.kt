@@ -22,6 +22,7 @@ class OverviewViewModel(
             val localCoinsList = viewModelScope.async { coinLocalRepo.getCoins() }
             if (coinsList.isNullOrEmpty()) {
                 coinsList.addAll(localCoinsList.await())
+                notifyDataChanged()
             }
 
             val remoteCoinsList = viewModelScope.async { coinRemoteRepo.getCoins() }
